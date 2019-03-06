@@ -47,7 +47,7 @@ func RequestCounter(
 	registry.MustRegister(requests)
 
 	latenciesOpts := prometheus.HistogramOpts{
-		Name:        "latencies_milliseconds",
+		Name:        "latencies_seconds",
 		Help:        "Request latencies, partitioned by status code, method and HTTP path.",
 		ConstLabels: labels,
 		Buckets:     buckets,
@@ -67,7 +67,7 @@ func RequestCounter(
 			code := strconv.Itoa(ww.Status())
 			path := chi.RouteContext(r.Context()).RoutePattern()
 			requests.WithLabelValues(code, r.Method, path).Inc()
-			latencies.WithLabelValues(code, r.Method, path).Observe(time.Since(start).Seconds())
+			latencies.WithLabelValues(code, r.Method, path).Observe(time.Since(start).Seconds() * 1000)
 		}
 		return http.HandlerFunc(fn)
 	}
