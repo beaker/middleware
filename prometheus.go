@@ -67,7 +67,7 @@ func RequestCounter(
 			code := strconv.Itoa(ww.Status())
 			path := chi.RouteContext(r.Context()).RoutePattern()
 			requests.WithLabelValues(code, r.Method, path).Inc()
-			latencies.WithLabelValues(code, r.Method, path).Observe(time.Since(start).Seconds() * 1000)
+			latencies.WithLabelValues(code, r.Method, path).Observe(time.Since(start).Seconds())
 		}
 		return http.HandlerFunc(fn)
 	}
