@@ -21,10 +21,10 @@ type requestMetric struct {
 	Help string `json:"help"`
 }
 
-func TestRequestCounter(t *testing.T) {
+func TestRequestMetrics(t *testing.T) {
 	registry := prometheus.NewRegistry()
 	r := chi.NewRouter()
-	r.Use(RequestCounter("test", registry))
+	r.Use(RequestMetrics("test", registry))
 	r.Route("/root", func(r chi.Router) {
 		r.Get("/sub", nilHandler)
 		r.Route("/{param}", func(r chi.Router) {
