@@ -10,10 +10,6 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 )
 
-const (
-	requestsMetricName = "request_counts"
-)
-
 var defaultBuckets = []float64{5, 10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 10000}
 
 // RequestCounter tracks request counts and latencies partitioned by response
@@ -44,15 +40,15 @@ func RequestCounter(
 	partitions := []string{"code", "method", "path"}
 
 	requestsOpts := prometheus.CounterOpts{
-		Name:        requestsMetricName,
-		Help:        "Count of HTTP requests, partitioned by status code, method and HTTP path.",
+		Name:        "request_count",
+		Help:        "Request counts, partitioned by status code, method and HTTP path.",
 		ConstLabels: labels,
 	}
 	requests := prometheus.NewCounterVec(requestsOpts, partitions)
 	registry.MustRegister(requests)
 
 	latenciesOpts := prometheus.HistogramOpts{
-		Name:        "latencies_milliseconds",
+		Name:        "request_latency_ms",
 		Help:        "Request latencies, partitioned by status code, method and HTTP path.",
 		ConstLabels: labels,
 		Buckets:     buckets,
