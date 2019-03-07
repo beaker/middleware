@@ -7,7 +7,7 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/prometheus/client_golang/prometheus"
-	dto "github.com/prometheus/client_model/go"
+	promType "github.com/prometheus/client_model/go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -42,44 +42,44 @@ func TestRequestCounter(t *testing.T) {
 	require.NoError(t, err)
 	require.Len(t, metrics, 2)
 
-	expectedCounts := []*dto.Metric{
+	expectedCounts := []*promType.Metric{
 		{
-			Label: []*dto.LabelPair{
+			Label: []*promType.LabelPair{
 				{Name: stringPtr("code"), Value: stringPtr("200")},
 				{Name: stringPtr("method"), Value: stringPtr("GET")},
 				{Name: stringPtr("path"), Value: stringPtr("/root/sub")},
 				{Name: stringPtr("service"), Value: stringPtr("test")},
 			},
-			Counter: &dto.Counter{Value: floatPtr(2)},
+			Counter: &promType.Counter{Value: floatPtr(2)},
 		},
 		{
-			Label: []*dto.LabelPair{
+			Label: []*promType.LabelPair{
 				{Name: stringPtr("code"), Value: stringPtr("200")},
 				{Name: stringPtr("method"), Value: stringPtr("GET")},
 				{Name: stringPtr("path"), Value: stringPtr("/root/{param}/")},
 				{Name: stringPtr("service"), Value: stringPtr("test")},
 			},
-			Counter: &dto.Counter{Value: floatPtr(1)},
+			Counter: &promType.Counter{Value: floatPtr(1)},
 		},
 		{
-			Label: []*dto.LabelPair{
+			Label: []*promType.LabelPair{
 				{Name: stringPtr("code"), Value: stringPtr("200")},
 				{Name: stringPtr("method"), Value: stringPtr("PUT")},
 				{Name: stringPtr("path"), Value: stringPtr("/root/{param}/")},
 				{Name: stringPtr("service"), Value: stringPtr("test")},
 			},
-			Counter: &dto.Counter{Value: floatPtr(1)},
+			Counter: &promType.Counter{Value: floatPtr(1)},
 		},
 	}
 	assert.Equal(t, "request_count", metrics[0].GetName())
 	assert.Equal(t, "Request counts, partitioned by status code, method and HTTP path.", metrics[0].GetHelp())
-	assert.Equal(t, dto.MetricType_COUNTER, metrics[0].GetType())
+	assert.Equal(t, promType.MetricType_COUNTER, metrics[0].GetType())
 	assert.Equal(t, expectedCounts, metrics[0].GetMetric())
 
 	// We don't directly validate latencies, but we can validate that they exist.
 	assert.Equal(t, "request_latency_ms", metrics[1].GetName())
 	assert.Equal(t, "Request latencies, partitioned by status code, method and HTTP path.", metrics[1].GetHelp())
-	assert.Equal(t, dto.MetricType_HISTOGRAM, metrics[1].GetType())
+	assert.Equal(t, promType.MetricType_HISTOGRAM, metrics[1].GetType())
 	assert.Len(t, metrics[1].GetMetric(), 3)
 }
 
