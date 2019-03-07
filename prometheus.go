@@ -12,7 +12,7 @@ import (
 
 var defaultBuckets = []float64{5, 10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 10000}
 
-// RequestCounter tracks request counts and latencies partitioned by response
+// RequestMetrics tracks request counts and latencies partitioned by response
 // code, HTTP method and path.
 //
 // The provided service should be unique to each tracked service. The registry
@@ -24,7 +24,7 @@ var defaultBuckets = []float64{5, 10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 1
 //
 // For accuracy, buckets should mirror the distribution of the latencies of the service.
 // See https://github.com/danielfm/prometheus-for-developers#quantile-estimation-errors
-func RequestCounter(
+func RequestMetrics(
 	service string,
 	registry prometheus.Registerer,
 	buckets ...float64,
